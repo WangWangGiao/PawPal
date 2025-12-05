@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pawpal/models/user.dart';
 import 'package:pawpal/views/loginpage.dart';
+import 'package:pawpal/views/submitpetscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,11 +16,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(actions: [IconButton(onPressed: logout, icon: Icon(Icons.logout))],),
       backgroundColor: Colors.white,
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        padding: const EdgeInsets.fromLTRB(20, 80, 20, 80),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -77,9 +79,9 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton (
-        onPressed: logout,
+        onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=> SubmitPetScreen()));},
         backgroundColor: Colors.white,
-        child: Icon(Icons.logout,color: Colors.blueAccent,),
+        child: Icon(Icons.add,color: Colors.blueAccent,),
       ),
     );
   }
