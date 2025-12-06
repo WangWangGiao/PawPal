@@ -156,6 +156,7 @@ class _HomePageState extends State<HomePage> {
                                                     0.22, // balanced aspect ratio
                                                 color: Colors.grey[200],
                                                 child: Image.network(
+                                                  //Using first image uploaded as thumbnail
                                                   '${MyConfig.baseUrl}/pawpal/server/uploads/pets_${petList[index].petId}_1.png',
                                                   fit: BoxFit.fill,
                                                   errorBuilder:
@@ -305,13 +306,12 @@ class _HomePageState extends State<HomePage> {
     http
         .get(
           Uri.parse(
-            '${MyConfig.baseUrl}/pawpal/server/api/get_my_pets.php?search=$search',
+            '${MyConfig.baseUrl}/pawpal/server/api/get_my_pets.php?search=$search', //search logic
           ),
         )
         .then((response) {
           if (response.statusCode == 200) {
             var jsonResponse = jsonDecode(response.body);
-            // log(jsonResponse.toString());
             if (jsonResponse['success'] == true &&
                 jsonResponse['data'] != null &&
                 jsonResponse['data'].isNotEmpty) {
@@ -324,7 +324,7 @@ class _HomePageState extends State<HomePage> {
                 status = "";
               });
             } else {
-              // success but EMPTY data
+              // success but didn't have any data inserted
               setState(() {
                 petList.clear();
                 status = "No Data Found";
@@ -408,6 +408,7 @@ class _HomePageState extends State<HomePage> {
                       itemCount: 3,
                       itemBuilder: (context, i) {
                         return Image.network(
+                          //Display 3 images, if there are only 2 image, the third became default icon (broke icon)
                           '${MyConfig.baseUrl}/pawpal/server/uploads/pets_${petList[index].petId}_${i + 1}.png',
                           fit: BoxFit.fill,
                           errorBuilder: (context, error, stackTrace) {
