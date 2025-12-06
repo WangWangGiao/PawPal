@@ -1,55 +1,134 @@
-# pawpal
+# Pawpal 🐾
 
-This is the first part of a continuos project series to develop for PawPal Pet Adoption & Donation Application using Flutter (frontend) and PHP + MYSQL (backend).
+Pawpal is an application that provide user to pet adoption and donation.
+It provides the user with a user-friendly view of the pet list and allow user to submit a new pet (include upload 3 image).
+The user can view the details from the pet list just click on the card.
 
-Login Process
+---
 
-• The user need to have an account first
+# Project Setup ⚙️
 
-• The user need to insert all the required information (Email and Password) to login.
+1. Development Environment
+- Flutter
+- Dart
+- phpMyAdmin
 
-• The user can tick the Remember Me feature to auto login for the next time.
+2. Create New Table on Database (tbl_pets)
+The attribute are based on the guidelines (docx)
+- pet_id
+- user_id
+- pet_name...
 
-Register Process
+3. Install library
+- Geolocator
+- Http
+- Image_cropper
+- Image_picker
+- Shared_preferences
 
-• The user need to insert all the required information (Username, Email, Password, Confirm Password, and Phone Number).
+4. Design interface (SubmitPetScreen and MainPage)
+- Design the interactive interface
+- SubmitPetScreen design for submit the new pet
+- MainPage design for display all pet that has been submitted
 
-• Once all the information is valid and it will pop up a showdialog to confirm again to register or not.
+5. Implement backend logic
+- Using http.post to post the data to php, and perform query to insert data into database
+- Using http.get to get the data from the database, and display the data/image to main interface
 
-• The information will insert into the database once user press on register.
+6. Add or advise some properties
+- AndroidManifest.xml need add user permission to get permission on location feature
+```
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+```
+- AndroidManifest.xml need add below coding to using Image_Cropper
+```
+<activity
+android:name="com.yalantis.ucrop.UCropActivity"
+android:screenOrientation="portrait"
+android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+```
+---
 
-Home Page
+# API Explaination 🛠️
+1. Submit_pet.php
+- Method: POST
+- Description: Inserts a new pet record into the database, including images and location.
 
-• After successful login, showing the account information on the screen.
+| Field        | Type           | Description                                    |
+|--------------|----------------|------------------------------------------------|
+| pet_id       | INT PK AI      | Unique ID                                      |
+| user_id      | INT            | Foreign key to tbl_users                       |
+| pet_name     | VARCHAR(100)   | Pet Name                                       |
+| pet_type     | VARCHAR(50)    | Cat/Dog/Rabbit/Other                           |
+| category     | VARCHAR(50)    | Adoption/Donation/Help                         |
+| description  | TEXT           | Pet Description                                |
+| image_paths  | TEXT           | JSON or comma-separated list of up to 3 paths  |
+| lat          | VARCHAR(50)    | Latitude                                       |
+| lng          | VARCHAR(50)    | Longitude                                      |
+| created_at   | DATETIME       | Time When Submmited                            |
 
-• Provide a simple logout function to disable auto login function.
+2. get_my_pets.php
+- Method: GET
+- Description: Fetches all pets submitted by users to display on the main page.
 
-Basic Validation Approach
+# Sample JSON 🧾
+- Sample send POST request
+```
+await http
+        .post(
+          Uri.parse('${MyConfig.baseUrl}/pawpal/server/api/submit_pet.php'),
+          body: {
+            'user_id': widget.user?.userId,
+            'pet_name': petName,
+            'pet_type': selectedPetType,
+            'category': selectedCategory,
+            'description': description,
+            'lat': latitude,
+            'lng': longitude,
+            'image': jsonEncode(base64image),
+          },
+        )
+```
+- Example Json 
+```
+{
+  "pet_id": 1,
+  "user_id": 1,
+  "pet_name": "Buddy",
+  "pet_type": "Dog",
+  "category": "Adoption",
+  "description": "Looking for a loving home.",
+  "image_paths": [
+    "uploads/pets_1_1.png",
+    "uploads/pets_1_2.png",
+    "uploads/pets_1_3.png"
+  ],
+  "lat": "3.1390",
+  "lng": "101.6869",
+  "created_at": "2025-12-06 14:30:00"
+}
+```
 
-• Check for empty value - If the user does not input anything in the TextFormField and presses the Login/SignUp button, it will showing the error text to warning user.
+- Example JsonResponse
+```
+  $response = array('success' => true, 'message' => 'Pet submitted successfully');
+  sendJsonResponse($response);
+  {
+    "success" : true,
+    "message" : "Pet submitted successfully"
+  }
+  
+  $response = array('success' => false, 'message' => 'Pet submitted failed');
+  sendJsonResponse($response);
+  {
+    "success" : false,
+    "message" : "Pet submitted failed"
+  }
 
-• Check email address - If the user fill the invalid email address, it will showing the error text to warning user for enter a valid email address.
+```
 
-• Check password length - If the user insert less than 6 characters on password TextFormField, it will showing the error text to warning user to enter at least 6 characters word.
-
-• Check email duplicate - If the user register account using the duplicate email (The email already been register before), it will showing the error text to warning user.
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="https://github.com/WangWangGiao/my-project-assets/blob/main/Pawpal_SplashScreen.png?raw=true" alt="SplashScreen" width="250"/>
-      <br>
-      <b>SplashScreen</b>
-    </td>
-    <td align="center">
-      <img src="https://github.com/WangWangGiao/my-project-assets/blob/main/Pawpal_LoginPage.png?raw=true" alt="HomeBefore" width="250"/>
-      <br>
-      <b>Login Page</b>
-    </td>
-    <td align="center">
-      <img src="https://github.com/WangWangGiao/my-project-assets/blob/main/Pawpal_RegisterPage.png?raw=true" alt="HomeAfterCalculation" width="250"/>
-      <br>
-      <b>Register Page</b>
-    </td>
-  </tr>
-</table>
+# Recommended 💡
+If you encounter issues during debugging, please run the following commands in the terminal and try again:
