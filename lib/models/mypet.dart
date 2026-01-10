@@ -3,12 +3,15 @@ class MyPet {
   String? userId;
   String? petName;
   String? petType;
+  String? petAge;
+  String? petGender;
+  String? petHealth;
   String? category;
   String? description;
   String? lat;
   String? lng;
   String? timeCreated;
-
+  
   String? userName;
   String? userEmail;
   String? userPhone;
@@ -18,6 +21,9 @@ class MyPet {
     this.userId,
     this.petName,
     this.petType,
+    this.petAge,
+    this.petGender,
+    this.petHealth,
     this.category,
     this.description,
     this.lat,
@@ -33,6 +39,9 @@ class MyPet {
     userId = json['user_id'];
     petName = json['pet_name'];
     petType = json['pet_type'];
+    petAge = json['pet_age'];
+    petGender = json['pet_gender'];
+    petHealth = json['pet_health'];
     category = json['category'];
     description = json['description'];
     lat = json['lat'];
@@ -50,6 +59,9 @@ class MyPet {
     data['user_id'] = userId;
     data['pet_name'] = petName;
     data['pet_type'] = petType;
+    data['pet_age'] = petAge;
+    data['pet_gender'] = petGender;
+    data['pet_health'] = petHealth;
     data['category'] = category;
     data['description'] = description;
     data['lat'] = lat;

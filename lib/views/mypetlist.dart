@@ -6,18 +6,19 @@ import 'package:pawpal/models/mypet.dart';
 import 'package:pawpal/models/user.dart';
 import 'package:pawpal/myconfig.dart';
 import 'package:pawpal/shared/mydrawer.dart';
+import 'package:pawpal/views/editpetlist.dart';
 import 'package:pawpal/views/petdetailpage.dart';
 import 'package:pawpal/views/submitpetscreen.dart';
 
-class HomePage extends StatefulWidget {
+class MyPetList extends StatefulWidget {
   final User? user;
-  const HomePage({super.key, required this.user});
+  const MyPetList({super.key, required this.user});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MyPetList> createState() => _MyPetListState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MyPetListState extends State<MyPetList> {
   List<MyPet> petList = [];
   String status = 'Loading...';
   late double screenWidth, screenHeight;
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                'Explore Pawpal',
+                'My Pet List',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
               ),
             ),
@@ -128,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-      
+
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 17),
@@ -229,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Text(
                                   category,
                                   textAlign: TextAlign.center,
-      
+
                                   style: TextStyle(
                                     // Selected Text = Text Color White, Else = Grey
                                     color: isSelected
@@ -277,19 +278,14 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
-                        items:
-                            <String>[
-                              'All',
-                              'Dog',
-                              'Cat',
-                              'Rabbit',
-                              'Other',
-                            ].map((String value) {
+                        items: <String>['All', 'Dog', 'Cat', 'Rabbit', 'Other']
+                            .map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(value),
                               );
-                            }).toList(),
+                            })
+                            .toList(),
                         onChanged: (String? newValue) {
                           setState(() {
                             selectedType = newValue!;
@@ -394,13 +390,10 @@ class _HomePageState extends State<HomePage> {
                                                 // Pet Image
                                                 ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                        10,
-                                                      ),
+                                                      BorderRadius.circular(10),
                                                   child: Container(
                                                     width: screenWidth * 0.23,
-                                                    height:
-                                                        screenWidth * 0.23,
+                                                    height: screenWidth * 0.23,
                                                     color: Colors.grey[200],
                                                     child: Image.network(
                                                       '${MyConfig.baseUrl}/pawpal/server/uploads/pet/pets_${petList[index].petId}_1.png',
@@ -423,7 +416,7 @@ class _HomePageState extends State<HomePage> {
                                                   ),
                                                 ),
                                                 const SizedBox(width: 16),
-      
+
                                                 // Pet some info
                                                 Expanded(
                                                   child: Column(
@@ -435,19 +428,14 @@ class _HomePageState extends State<HomePage> {
                                                       Text(
                                                         petList[index].petName
                                                             .toString(),
-                                                        style:
-                                                            const TextStyle(
-                                                              fontSize: 21,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Colors
-                                                                  .black,
-                                                            ),
+                                                        style: const TextStyle(
+                                                          fontSize: 21,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
                                                       ),
-                                                      const SizedBox(
-                                                        height: 6,
-                                                      ),
+                                                      const SizedBox(height: 6),
                                                       // Pet Type
                                                       Text(
                                                         "Type: ${petList[index].petType}",
@@ -455,13 +443,11 @@ class _HomePageState extends State<HomePage> {
                                                           fontSize: 17,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: Colors
-                                                              .grey[700],
+                                                          color:
+                                                              Colors.grey[700],
                                                         ),
                                                       ),
-                                                      const SizedBox(
-                                                        height: 4,
-                                                      ),
+                                                      const SizedBox(height: 4),
                                                       // Pet Age
                                                       Row(
                                                         children: [
@@ -485,6 +471,53 @@ class _HomePageState extends State<HomePage> {
                                                                   .grey[500],
                                                             ),
                                                           ),
+
+                                                          const Spacer(),
+
+                                                          // Edit Button
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (
+                                                                        context,
+                                                                      ) => EditPetList(
+                                                                        user: widget
+                                                                            .user,
+                                                                        myPet:
+                                                                            petList[index],
+                                                                      ),
+                                                                ),
+                                                              );
+                                                            },
+                                                            child: const Icon(
+                                                              Icons.edit_note,
+                                                              color: Colors
+                                                                  .blueAccent,
+                                                              size: 24,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 12,
+                                                          ),
+
+                                                          // Delete Button
+                                                          GestureDetector(
+                                                            onTap: () =>
+                                                                showDeleteDialog(
+                                                                  petList[index]
+                                                                      .petId,
+                                                                ),
+                                                            child: const Icon(
+                                                              Icons
+                                                                  .delete_outline,
+                                                              color: Colors
+                                                                  .redAccent,
+                                                              size: 24,
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                     ],
@@ -493,7 +526,7 @@ class _HomePageState extends State<HomePage> {
                                               ],
                                             ),
                                           ),
-      
+
                                           // Category (Right Top)
                                           Positioned(
                                             top: 0,
@@ -506,8 +539,9 @@ class _HomePageState extends State<HomePage> {
                                                     vertical: 6,
                                                   ),
                                               decoration: BoxDecoration(
-                                                color: categoryColor
-                                                    .withValues(alpha: 0.7),
+                                                color: categoryColor.withValues(
+                                                  alpha: 0.7,
+                                                ),
                                                 borderRadius:
                                                     const BorderRadius.only(
                                                       bottomLeft:
@@ -553,7 +587,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         child: Icon(Icons.add, color: const Color.fromRGBO(68, 138, 255, 1)),
       ),
-      drawer: MyDrawer(user: widget.user, currentPage: "home"),
+      drawer: MyDrawer(user: widget.user, currentPage: "myPetList"),
     );
   }
 
@@ -573,7 +607,7 @@ class _HomePageState extends State<HomePage> {
       status = "Loading...";
     });
     petList.clear();
-    String userIdArg = "All";
+    String? userIdArg = widget.user?.userId;
     http
         .get(
           Uri.parse(
@@ -610,5 +644,164 @@ class _HomePageState extends State<HomePage> {
             });
           }
         });
+  }
+
+  Future<void> showDeleteDialog(String? petId) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 10,
+          backgroundColor: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.redAccent,
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Delete Pet Record?",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  "Are you sure you want to delete this? This action cannot be undone.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 15, color: Colors.black38),
+                ),
+                const SizedBox(height: 25),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          deletePetRecord(petId);
+                        },
+                        child: const Text(
+                          "Delete",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void deletePetRecord(String? petid) async {
+    await http
+        .post(
+          Uri.parse('${MyConfig.baseUrl}/pawpal/server/api/delete_pet.php'),
+          body: {'pet_id': petid},
+        )
+        .then((response) {
+          if (response.statusCode == 200) {
+            var jsonResponse = response.body;
+            var resarray = jsonDecode(jsonResponse);
+            if (resarray['success']) {
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text(
+                    resarray['message'],
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              );
+              Navigator.pop(context);
+              loadData('');
+            } else {
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    resarray['message'],
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              );
+            }
+          } else {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text(
+                  'Registration failed. CODE: ${response.statusCode}',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+              ),
+            );
+          }
+        })
+        .timeout(
+          Duration(seconds: 15),
+          onTimeout: () {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text(
+                  'Request failed. Please try again later',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+              ),
+            );
+          },
+        );
   }
 }

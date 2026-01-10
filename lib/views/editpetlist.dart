@@ -8,25 +8,27 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pawpal/models/mypet.dart';
 import 'package:pawpal/models/user.dart';
 import 'package:pawpal/myconfig.dart';
-import 'package:pawpal/views/mainpage.dart';
+import 'package:pawpal/views/mypetlist.dart';
 
-class SubmitPetScreen extends StatefulWidget {
+class EditPetList extends StatefulWidget {
   final User? user;
-  const SubmitPetScreen({super.key, required this.user});
+  final MyPet? myPet;
+  const EditPetList({super.key, required this.user, required this.myPet});
 
   @override
-  State<SubmitPetScreen> createState() => _SubmitPetScreenState();
+  State<EditPetList> createState() => _EditPetListState();
 }
 
-class _SubmitPetScreenState extends State<SubmitPetScreen> {
+class _EditPetListState extends State<EditPetList> {
   List<String> petType = ['Cat', 'Dog', 'Rabbit', 'Other'];
   List<String> category = ['Adoption', 'Donate Request', 'Help/Rescue'];
   List<String> petGender = ['Male', 'Female'];
-  String selectedPetType = 'Cat'; //Default Selection
-  String selectedCategory = 'Adoption'; //Default Selection
-  String selectedGender = 'Male'; //Default Selection
+  late String selectedPetType;
+  late String selectedCategory;
+  late String selectedGender;
   String? petName;
   String? locationLongtitude;
   String? description;
@@ -40,13 +42,29 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
   List<Uint8List?> webImage = [null, null, null];
   List<File?> image = [null, null, null];
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  late TextEditingController nameController;
+  late TextEditingController ageController;
+  late TextEditingController healthController;
+  late TextEditingController descriptionController;
   bool visibleSecondImagePicker = false;
   bool visibleThirdImagePicker = false;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    determineLocation();
+    nameController = TextEditingController(text: widget.myPet?.petName);
+    ageController = TextEditingController(text: widget.myPet?.petAge);
+    healthController = TextEditingController(text: widget.myPet?.petHealth);
+    descriptionController = TextEditingController(
+      text: widget.myPet?.description,
+    );
+
+    longtitudeController.text = widget.myPet?.lng ?? '';
+    latitudeController.text = widget.myPet?.lat ?? '';
+
+    selectedPetType = widget.myPet?.petType ?? 'Dog';
+    selectedCategory = widget.myPet?.category ?? 'Adoption';
+    selectedGender = widget.myPet?.petGender ?? 'Male';
   }
 
   @override
@@ -80,6 +98,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                   child: Column(
                     children: [
                       TextFormField(
+                        controller: nameController,
                         style: TextStyle(color: Colors.black, fontSize: 20),
                         decoration: InputDecoration(
                           filled: true,
@@ -137,6 +156,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                       ),
                       //Drop Down Button for Pet Type (Cat,Dog,Rabbit,Other)
                       DropdownButtonFormField<String>(
+                        initialValue: selectedPetType,
                         style: TextStyle(color: Colors.black, fontSize: 20),
                         decoration: InputDecoration(
                           filled: true,
@@ -209,6 +229,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                       ),
                       // Gender
                       DropdownButtonFormField<String>(
+                        initialValue: selectedGender,
                         style: TextStyle(color: Colors.black, fontSize: 20),
                         decoration: InputDecoration(
                           filled: true,
@@ -278,6 +299,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                       ),
                       // Pet Age
                       TextFormField(
+                        controller: ageController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -346,6 +368,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                       ),
                       //Drop Down Button for Category (Adoption, Donation Request, Help/Rescue)
                       DropdownButtonFormField<String>(
+                        initialValue: selectedCategory,
                         style: TextStyle(color: Colors.black, fontSize: 20),
                         decoration: InputDecoration(
                           filled: true,
@@ -418,6 +441,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                       ),
                       //Health Condition
                       TextFormField(
+                        controller: healthController,
                         style: TextStyle(color: Colors.black, fontSize: 20),
                         decoration: InputDecoration(
                           labelText: 'Health Condition',
@@ -472,6 +496,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                       ),
                       //Description (Minimum 10 Charaters)
                       TextFormField(
+                        controller: descriptionController,
                         style: TextStyle(color: Colors.black, fontSize: 20),
                         decoration: InputDecoration(
                           labelText: 'Description',
@@ -641,6 +666,16 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                         onSaved: (value) {
                           locationLongtitude = value;
                         },
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.info, color: Colors.blueAccent),
+                          const SizedBox(width: 10),
+                          Text(
+                            'If didn\'t upload picture will using previous picture',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -902,10 +937,8 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
   }
 
   void autoFillLocation() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      longtitudeController.text = position.longitude.toString();
-      latitudeController.text = position.latitude.toString();
-    });
+    longtitudeController.text = position.longitude.toString();
+    latitudeController.text = position.latitude.toString();
   }
 
   Future<void> openGallery(int index) async {
@@ -1011,44 +1044,13 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
 
   void validateForm() {
     if (formKey.currentState!.validate()) {
-      //Check Image (At least upload 1 image)
-      if (kIsWeb) {
-        if (webImage[0] == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Please upload at least 1 image',
-                style: TextStyle(fontSize: 15),
-              ),
-              backgroundColor: Colors.red,
-              duration: Duration(seconds: 2),
-            ),
-          );
-          return;
-        }
-      } else {
-        if (image[0] == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Please upload at least 1 image',
-                style: TextStyle(fontSize: 15),
-              ),
-              backgroundColor: Colors.red,
-              duration: Duration(seconds: 2),
-            ),
-          );
-          return;
-        }
-      }
-
       //Perform textformfield save operation
       formKey.currentState!.save();
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text(
-            'Submit New Pet',
+            'Update Pet Record',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: const Color.fromARGB(255, 28, 59, 112),
@@ -1058,7 +1060,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                submitPet();
+                updatePet();
               },
               child: Text(
                 'Submit',
@@ -1082,7 +1084,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
             ),
           ],
           content: Text(
-            'Are you sure you want to submit this submission?',
+            'Are you sure you want to update this pet record?',
             style: TextStyle(fontSize: 18, color: Colors.black),
           ),
         ),
@@ -1092,29 +1094,33 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
     }
   }
 
-  void submitPet() async {
+  void updatePet() async {
     List<String?> base64image = [];
-    if (kIsWeb) {
-      for (int x = 0; x <= 2; x++) {
-        if (webImage[x] == null) {
-          continue;
-        }
-        base64image.add(base64Encode(webImage[x]!));
-      }
+    bool ImageChanged = kIsWeb ? (webImage[0] != null) : (image[0] != null);
+
+    if (!ImageChanged) {
+      // Didn't upload any new picture
+      base64image.add("no_change");
     } else {
       for (int x = 0; x <= 2; x++) {
-        if (image[x] == null) {
-          continue;
+        var currentImage = kIsWeb ? webImage[x] : image[x];
+
+        if (currentImage != null) {
+          String base64 = kIsWeb
+              ? base64Encode(webImage[x]!)
+              : base64Encode(image[x]!.readAsBytesSync());
+          base64image.add(base64);
+        } else {
+          base64image.add("remove");
         }
-        base64image.add(base64Encode(image[x]!.readAsBytesSync()));
       }
     }
-    String latitude = latitudeController.text.trim();
-    String longitude = longtitudeController.text.trim();
+
     await http
         .post(
-          Uri.parse('${MyConfig.baseUrl}/pawpal/server/api/submit_pet.php'),
+          Uri.parse('${MyConfig.baseUrl}/pawpal/server/api/update_pet.php'),
           body: {
+            'pet_id': widget.myPet?.petId,
             'user_id': widget.user?.userId,
             'pet_name': petName,
             'pet_type': selectedPetType,
@@ -1123,8 +1129,8 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
             'pet_health': petHealth,
             'category': selectedCategory,
             'description': description,
-            'lat': latitude,
-            'lng': longitude,
+            'lat': latitudeController.text.trim(),
+            'lng': longtitudeController.text.trim(),
             'image': jsonEncode(base64image),
           },
         )
@@ -1143,7 +1149,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomePage(user: widget.user),
+                  builder: (context) => MyPetList(user: widget.user),
                 ),
               );
             } else {

@@ -29,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
   late double screenWidth;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loadPreferences();
   }
@@ -283,14 +282,12 @@ class _LoginPageState extends State<LoginPage> {
   void prefUpdate(bool isChecked) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (isChecked) {
-      prefs.setString('email', emailController.text);
-      prefs.setString('password', passwordController.text);
       prefs.setBool('rememberMe', isChecked);
     } else {
-      prefs.remove('email');
-      prefs.remove('password');
       prefs.remove('rememberMe');
     }
+      prefs.setString('email', emailController.text);
+      prefs.setString('password', passwordController.text);
   }
 
   void loginValidate() {

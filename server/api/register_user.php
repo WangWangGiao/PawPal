@@ -25,7 +25,7 @@
 		}
 
 		// Insert new user into database
-		$sqlregister = "INSERT INTO `tbl_users`(`name`, `email`, `password`, `phone`) VALUES ('$name','$email','$hashedpassword', '$phone')";
+		$sqlregister = "INSERT INTO `tbl_users`(`name`, `email`, `password`, `phone`, `credit`, `avatar`) VALUES ('$name','$email','$hashedpassword', '$phone', 0, '')";
 		try{
 			if ($conn->query($sqlregister) === TRUE){
 				$response = array('success' => true, 'message' => 'Registration Successful');

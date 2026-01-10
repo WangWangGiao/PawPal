@@ -4,6 +4,8 @@ class User {
   String? userEmail;
   String? userPassword;
   String? userPhone;
+  String? userCredit;
+  String? userAvatar;
   String? userRegdate;
 
   User(
@@ -12,6 +14,8 @@ class User {
       this.userEmail,
       this.userPassword,
       this.userPhone,
+      this.userCredit,
+      this.userAvatar,
       this.userRegdate
       }
     );
@@ -22,6 +26,8 @@ class User {
     userEmail = json['email'];
     userPassword = json['password'];
     userPhone = json['phone'];
+    userCredit = json['credit'];
+    userAvatar = json['avatar'];
     userRegdate = json['reg_date'];
   }
 
@@ -32,6 +38,8 @@ class User {
     data['email'] = userEmail;
     data['password'] = userPassword;
     data['phone'] = userPhone;
+    data['credit'] = userCredit;
+    data['avatar'] = userAvatar;
     data['reg_date'] = userRegdate;
     return data;
   }
