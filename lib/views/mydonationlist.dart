@@ -147,6 +147,7 @@ class _MyDonationListState extends State<MyDonationList> {
                                                       ),
                                                     ),
                                                     const SizedBox(height: 6),
+                                                    //Donation as Money
                                                     if (donationList[index]
                                                             .donationtype ==
                                                         'Money') ...[
@@ -162,7 +163,7 @@ class _MyDonationListState extends State<MyDonationList> {
                                                               .ellipsis,
                                                         ),
                                                       ),
-                                                    ] else if (donationList[index]
+                                                    ] else if (donationList[index] //Donate as item
                                                                 .donationtype ==
                                                             'Food' ||
                                                         donationList[index]
@@ -210,7 +211,7 @@ class _MyDonationListState extends State<MyDonationList> {
                                           ),
                                         ),
 
-                                        // Category (Right Top)
+                                        // Donate Type (Right Top)
                                         Positioned(
                                           top: 0,
                                           right: 0,

@@ -70,6 +70,7 @@ class _MyDrawerState extends State<MyDrawer> {
                           68,
                           111,
                         ).withValues(alpha: 0.3),
+                        //Load avatar or Replace with username first character
                         backgroundImage:
                             (widget.user?.userAvatar != null &&
                                 widget.user!.userAvatar!.isNotEmpty)
@@ -420,6 +421,7 @@ class _MyDrawerState extends State<MyDrawer> {
     );
   }
 
+  //Remove all prefs once log out
   void logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('name');
@@ -506,6 +508,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   TextField(
                     controller: amountController,
                     keyboardType: TextInputType.number,
+                    //Filter user input (only 4 digit and cannot start with 0)
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       FilteringTextInputFormatter.deny(RegExp(r'^0')),
@@ -667,6 +670,7 @@ class _MyDrawerState extends State<MyDrawer> {
     );
   }
 
+  //Reload user data
   Future<void> fetchLatestUserData() async {
     await http
         .post(

@@ -60,6 +60,7 @@ class _AdoptRequestState extends State<AdoptRequest> {
                 ),
               ),
               const SizedBox(height: 12),
+              //Use custom widget method to easily make multiple same layout textfield
               _buildMultilineTextField(
                 controller: motivationController,
                 hint:"Why do you want to adopt ${widget.myPet?.petName}? Tell us about your home environment.",
@@ -112,7 +113,7 @@ class _AdoptRequestState extends State<AdoptRequest> {
     );
   }
 
-  // 輸入框組件
+  // Widget Textfield
   Widget _buildMultilineTextField({
     required TextEditingController controller,
     required String hint,
@@ -138,6 +139,7 @@ class _AdoptRequestState extends State<AdoptRequest> {
     );
   }
 
+  //Submit Confirmation Dialog
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();

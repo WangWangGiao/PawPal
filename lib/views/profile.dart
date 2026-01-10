@@ -63,6 +63,7 @@ class _ProfileState extends State<Profile> {
               child: CircleAvatar(
                 radius: 60,
                 backgroundColor: Colors.blue.withValues(alpha: 0.3),
+                //Load avatar or Replace with username first character
                 backgroundImage: userPic != null
                     ? MemoryImage(userPic!)
                     : kIsWeb && webImage != null
@@ -106,6 +107,7 @@ class _ProfileState extends State<Profile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10),
+                  //Widget method
                   _buildLabel("Name"),
                   _buildInputField(
                     hint: "Enter your name",

@@ -376,9 +376,11 @@ class _DonateState extends State<Donate> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       if (selectedDonationType == 'Money') {
+        //If Donate with money
         description = "N/A";
         int donateAmount = int.parse(amount.toString());
         int creditUser = int.parse(widget.user!.userCredit.toString());
+        //If user credit insufficient to donate, ask user to top up at home page
         if (donateAmount > creditUser) {
           showDialog(
             context: context,
@@ -462,6 +464,7 @@ class _DonateState extends State<Donate> {
     }
   }
 
+  //Confirmation Dialog
   Future<void> donateConfirmation(String donateType) {
     return showDialog(
       context: context,
