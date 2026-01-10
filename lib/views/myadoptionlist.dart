@@ -145,7 +145,7 @@ class _MyAdoptionListState extends State<MyAdoptionList> {
                                               ),
                                               const SizedBox(width: 16),
 
-                                              // Pet some info
+                                              // Pet and owner info
                                               Expanded(
                                                 child: Column(
                                                   crossAxisAlignment:
@@ -164,7 +164,7 @@ class _MyAdoptionListState extends State<MyAdoptionList> {
                                                       ),
                                                     ),
                                                     const SizedBox(height: 6),
-                                                    // Pet Type
+                                                    // Owner Name
                                                     Text(
                                                       "Owner: ${adoptionList[index].userName}",
                                                       style: TextStyle(
@@ -175,7 +175,7 @@ class _MyAdoptionListState extends State<MyAdoptionList> {
                                                       ),
                                                     ),
                                                     const SizedBox(height: 4),
-                                                    // Pet Age
+                                                    // Owner Phone
                                                     Row(
                                                       children: [
                                                         Text(
@@ -188,9 +188,6 @@ class _MyAdoptionListState extends State<MyAdoptionList> {
                                                                 .grey[500],
                                                           ),
                                                         ),
-
-                                                        //const Spacer(),
-
                                                         // Delete Button
                                                         Expanded(
                                                           child: GestureDetector(

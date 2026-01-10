@@ -478,7 +478,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
       case 'donate request':
         return Color.fromARGB(255, 36, 59, 94);
       default:
-        return Colors.white;
+        return const Color.fromARGB(255, 77, 226, 132);
     }
   }
 
